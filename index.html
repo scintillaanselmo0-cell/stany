@@ -73,6 +73,7 @@
       <a href="#listino">Listino</a>
       <a href="#sposa">Sposa</a>
       <a href="#hairspa">Hair Spa</a>
+      <a href="#massaggi">Massaggi</a>
       <a href="#beauty">Beauty</a>
       <a href="#team">Team</a>
       <a href="#contatti">Contatti</a>
@@ -93,9 +94,10 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero__media">
-    <img src="img/hero-sposa-terrazza.jpg"
-         alt="Acconciatura sposa curata su una terrazza affacciata sul Golfo di Salerno all'ora del tramonto"
-         fetchpriority="high">
+    <video class="hero__video" autoplay muted loop playsinline preload="auto"
+           poster="img/hero-bg-poster.jpg" aria-hidden="true" data-bgvideo>
+      <source src="vid/hero-bg.mp4" type="video/mp4">
+    </video>
   </div>
   <svg class="hero__ring" viewBox="0 0 200 200" aria-hidden="true">
     <circle cx="100" cy="100" r="94"/>
@@ -163,8 +165,16 @@
 <section class="section section--alt" id="hairspa">
   <div class="wrap split split--rev">
     <div class="split__media">
-      <div class="slot"><span>foto: dettaglio Hair Spa — lavaggio / trattamento su cute, luce calda</span></div>
-      <!-- <figure class="figure"><img src="img/hairspa.jpg" alt="Trattamento Hair Spa: massaggio e cura del capello"></figure> -->
+      <figure class="video-card">
+        <video autoplay muted loop playsinline preload="none"
+               poster="img/hairspa-poster.jpg" data-bgvideo>
+          <source src="vid/hairspa.mp4" type="video/mp4">
+        </video>
+        <button class="unmute" type="button" aria-label="Attiva audio">
+          <svg class="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>
+          <svg class="i-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        </button>
+      </figure>
     </div>
     <div class="split__copy">
       <h2 data-spa-title>Hair Spa</h2>
@@ -174,9 +184,28 @@
   </div>
 </section>
 
+<!-- ============ MASSAGGI ============ -->
+<section class="section" id="massaggi">
+  <div class="wrap split">
+    <div class="split__media">
+      <figure class="video-card">
+        <video autoplay muted loop playsinline preload="none"
+               poster="img/massaggi-poster.jpg" data-bgvideo>
+          <source src="vid/massaggi.mp4" type="video/mp4">
+        </video>
+      </figure>
+    </div>
+    <div class="split__copy">
+      <h2 data-massaggi-title>Massaggi</h2>
+      <p data-massaggi-text>—</p>
+      <p style="margin-top:26px"><a class="btn btn--gold" data-wa href="#" target="_blank" rel="noopener">Prenota un massaggio</a></p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ BEAUTY EXPERIENCE ============ -->
 <section class="section" id="beauty">
-  <div class="wrap split">
+  <div class="wrap split split--rev">
     <div class="split__media">
       <div class="slot"><span>foto: sezione beauty / trucco sposa — dettaglio, luce morbida</span></div>
       <!-- <figure class="figure"><img src="img/beauty.jpg" alt="Trucco sposa e beauty look"></figure> -->

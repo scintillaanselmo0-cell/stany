@@ -67,6 +67,10 @@
     } else { giftWrap.remove(); }
   }
 
+  /* ---- MASSAGGI ---- */
+  D.massaggi && $("[data-massaggi-title]") && ($("[data-massaggi-title]").textContent=D.massaggi.titolo);
+  D.massaggi && $("[data-massaggi-text]")  && ($("[data-massaggi-text]").textContent=D.massaggi.testo);
+
   /* ---- BEAUTY ---- */
   $("[data-beauty-text]") && ($("[data-beauty-text]").textContent=D.beauty.testo);
   const bList = $("[data-beauty-list]");
@@ -217,6 +221,30 @@
 
   /* ---- anno footer ---- */
   $("[data-year]") && ($("[data-year]").textContent = new Date().getFullYear());
+
+  /* ---- VIDEO: autoplay muto in loop, pausa fuori schermo, reduced-motion ---- */
+  const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const vids = $$("[data-bgvideo]");
+  const tryPlay = v => { try{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); }catch(e){} };
+  if(reduceMotion){
+    vids.forEach(v=>{ v.removeAttribute("autoplay"); try{v.pause();}catch(e){} });
+  } else if("IntersectionObserver" in window){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting) tryPlay(e.target); else { try{e.target.pause();}catch(err){} }
+    }),{threshold:.15});
+    vids.forEach(v=>io.observe(v));
+  } else { vids.forEach(tryPlay); }
+
+  /* tap-per-audio (hair spa) */
+  $$(".video-card .unmute").forEach(btn=>{
+    const v = btn.parentElement.querySelector("video");
+    btn.addEventListener("click",()=>{
+      v.muted = !v.muted;
+      btn.classList.toggle("is-on", !v.muted);
+      btn.setAttribute("aria-label", v.muted ? "Attiva audio" : "Disattiva audio");
+      if(!v.muted) tryPlay(v);
+    });
+  });
 
   /* ---- hero ring: imposta lunghezza tratto per il disegno ---- */
   $$(".hero__ring circle").forEach(cir=>{

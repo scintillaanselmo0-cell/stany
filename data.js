@@ -97,6 +97,22 @@ const DATA = {
     giftLink: ""   // ← es. "https://buy.stripe.com/xxxxxxxx"  (vuoto = bottone nascosto)
   },
 
+  /* ---- MASSAGGI ---- */
+  massaggi: {
+    titolo: "Massaggi",
+    testo: "Il benessere non si ferma al capello. Nell'area dedicata proponiamo massaggi che sciolgono la tensione e completano l'esperienza — un momento tutto per te, prima o dopo il salone.",
+    voci: []  // ← eventuale listino massaggi: [{ nome:"…", prezzo:"…" }]
+  },
+
+  /* ---- VIDEO (sfondo hero, hair spa, massaggi) ----
+     I file stanno nella cartella /vid. Poster (prima immagine) in /img.
+     Per sostituire un video: rimpiazza il file mantenendo lo stesso nome. */
+  media: {
+    heroVideo:      "vid/hero-bg.mp4",     heroPoster:     "img/hero-bg-poster.jpg",
+    hairspaVideo:   "vid/hairspa.mp4",     hairspaPoster:  "img/hairspa-poster.jpg",
+    massaggiVideo:  "vid/massaggi.mp4",    massaggiPoster: "img/massaggi-poster.jpg"
+  },
+
   /* ---- BEAUTY EXPERIENCE (estetica — Stefania Sessa) ---- */
   beauty: {
     titolo: "Beauty Experience",
