@@ -274,6 +274,42 @@ p{ margin:0 0 1em; }
   color:var(--ivory-dim); max-width:30ch; margin-inline:auto; }
 .reviews-empty .links{ display:flex; gap:14px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
 
+/* ---------- Beauty block (senza foto) ---------- */
+.beauty-block{ max-width:640px; margin-inline:auto; text-align:center; }
+.beauty-block .beauty-wordmark{ margin:0 auto 24px; }
+.beauty-block p{ color:var(--ivory-dim); }
+.beauty-block .beauty-list{ text-align:left; max-width:440px; margin:20px auto 0; }
+
+/* ---------- Prenotazione ---------- */
+.booking{ display:grid; grid-template-columns:1fr; gap:clamp(28px,5vw,56px); align-items:start; }
+@media(min-width:900px){ .booking{ grid-template-columns:1.35fr .65fr; } }
+.booking__form{ display:grid; gap:18px; max-width:580px; }
+.field-row{ display:grid; grid-template-columns:1fr; gap:18px; }
+@media(min-width:520px){ .field-row{ grid-template-columns:1fr 1fr; } }
+.field{ display:grid; gap:7px; }
+.field label{ font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); }
+.field label .opt{ color:var(--muted); letter-spacing:.02em; text-transform:none; }
+.field select, .field input{ width:100%; font-family:var(--sans); font-size:1rem; color:var(--ivory);
+  background:var(--ink); border:1px solid var(--line); border-radius:var(--radius);
+  padding:13px 14px; appearance:none; -webkit-appearance:none; transition:border-color .2s; }
+.field select:focus, .field input:focus{ border-color:var(--gold); outline:none; }
+.field select{ padding-right:40px; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23c9a227' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center; }
+.field select:disabled{ color:var(--muted); cursor:not-allowed; opacity:.7; }
+.field input::placeholder{ color:var(--muted); }
+input[type="date"]{ color-scheme:dark; }
+input[type="date"]::-webkit-calendar-picker-indicator{ cursor:pointer;
+  filter:invert(72%) sepia(38%) saturate(680%) hue-rotate(5deg) brightness(92%); }
+.booking__msg{ min-height:1.2em; margin:2px 0 0; font-size:.9rem; color:var(--gold-br); }
+.booking__msg.err{ color:#e0a08f; }
+.booking [data-bk-submit]{ justify-self:start; }
+.booking__alt{ color:var(--muted); font-size:.9rem; margin:0; }
+.booking__alt a{ color:var(--gold-br); }
+.booking__aside{ border:1px solid var(--line); border-radius:var(--radius); padding:26px 26px 22px; }
+.booking__aside h3{ font-family:var(--serif); color:var(--gold); font-size:1.4rem; margin:0 0 14px; font-weight:400; }
+.booking__note{ color:var(--muted); font-size:.86rem; margin:16px 0 0; }
+
 /* ---------- Contatti ---------- */
 .contact{ display:grid; grid-template-columns:1fr; gap:clamp(32px,5vw,60px); }
 @media(min-width:920px){ .contact{ grid-template-columns:1.05fr .95fr; } }

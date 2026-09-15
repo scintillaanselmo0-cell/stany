@@ -193,15 +193,16 @@
     });
   }
 
-  // lista orari (oggi evidenziato)
-  const hoursEl = $("[data-hours]");
-  if(hoursEl){
+  // lista orari (oggi evidenziato) — su tutte le liste presenti
+  const hoursLists = $$("[data-hours]");
+  if(hoursLists.length){
     const {dow} = romeNow(); const todayKey = KEYS[dow];
-    hoursEl.innerHTML = ORDER.map(k=>{
+    const html = ORDER.map(k=>{
       const iv = D.orari[k]||[];
       const h = iv.length ? iv.map(([s,e])=>`${s}–${e}`).join(" · ") : "Chiuso";
       return `<li class="${k===todayKey?"today":""}"><span class="d">${LABELS[k]}</span><span class="h">${h}</span></li>`;
     }).join("");
+    hoursLists.forEach(el=>el.innerHTML=html);
   }
   renderStatus();
   setInterval(renderStatus, 60000);
@@ -245,6 +246,76 @@
       if(!v.muted) tryPlay(v);
     });
   });
+
+  /* ============ PRENOTAZIONE (trattamento / giorno / orario → WhatsApp) ============ */
+  const bkServ=$("[data-bk-serv]"), bkDate=$("[data-bk-date]"), bkTime=$("[data-bk-time]"),
+        bkName=$("[data-bk-name]"), bkMsg=$("[data-bk-msg]"), bkSubmit=$("[data-bk-submit]");
+  if(bkServ && bkDate && bkTime && bkSubmit){
+    // Trattamenti dal listino (+ eventuali voci beauty) + voci esperienza
+    let opts = '<option value="">Scegli un trattamento</option>';
+    D.listino.categorie.forEach(cat=>{
+      opts += `<optgroup label="${esc(cat.nome)}">`
+        + cat.voci.map(v=>`<option>${esc(v.nome)} — ${esc(v.prezzo)}</option>`).join("")
+        + `</optgroup>`;
+    });
+    if(D.beauty && D.beauty.voci && D.beauty.voci.length){
+      opts += `<optgroup label="Beauty">`
+        + D.beauty.voci.map(v=>`<option>${esc(v.nome)}${v.prezzo?` — ${esc(v.prezzo)}`:""}</option>`).join("")
+        + `</optgroup>`;
+    }
+    opts += `<optgroup label="Esperienza & Eventi">`
+      + ["Hair Spa","Massaggio","Acconciatura sposa / evento","Beauty / trucco","Consulenza"]
+        .map(x=>`<option>${x}</option>`).join("")
+      + `</optgroup>`;
+    bkServ.innerHTML = opts;
+
+    // Data minima = oggi (Europe/Rome)
+    const todayISO = new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Rome",
+      year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+    bkDate.min = todayISO;
+
+    function slotsFor(dateStr){
+      const [y,m,d]=dateStr.split("-").map(Number);
+      const key = KEYS[new Date(y,m-1,d).getDay()];
+      const iv = D.orari[key]||[];
+      const slots=[];
+      iv.forEach(([s,e])=>{
+        for(let t=toMin(s); t<=toMin(e)-30; t+=30){
+          slots.push(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"));
+        }
+      });
+      return slots;
+    }
+    function fmtDateIt(dateStr){
+      const [y,m,d]=dateStr.split("-").map(Number);
+      return new Date(y,m-1,d).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});
+    }
+    function setMsg(t,err){ bkMsg.textContent=t||""; bkMsg.classList.toggle("err",!!err); }
+
+    bkDate.addEventListener("change",()=>{
+      setMsg("");
+      if(!bkDate.value){ bkTime.disabled=true; bkTime.innerHTML='<option value="">Scegli prima il giorno</option>'; return; }
+      const slots=slotsFor(bkDate.value);
+      if(!slots.length){
+        bkTime.disabled=true; bkTime.innerHTML='<option value="">—</option>';
+        setMsg("Quel giorno siamo chiusi: scegli da martedì a sabato.",true); return;
+      }
+      bkTime.disabled=false;
+      bkTime.innerHTML='<option value="">Scegli un orario</option>'+slots.map(s=>`<option>${s}</option>`).join("");
+    });
+
+    bkSubmit.addEventListener("click",()=>{
+      if(!bkServ.value){ setMsg("Scegli un trattamento.",true); bkServ.focus(); return; }
+      if(!bkDate.value){ setMsg("Scegli un giorno.",true); bkDate.focus(); return; }
+      if(!bkTime.value){ setMsg("Scegli un orario.",true); bkTime.focus(); return; }
+      const nome=(bkName.value||"").trim();
+      let txt=`Ciao Stany! Vorrei prenotare:\n• Trattamento: ${bkServ.value}\n• Giorno: ${fmtDateIt(bkDate.value)}\n• Orario: ${bkTime.value}`;
+      if(nome) txt+=`\n• Nome: ${nome}`;
+      txt+=`\nÈ disponibile?`;
+      setMsg("Apriamo WhatsApp con la tua richiesta…");
+      window.open(`https://wa.me/${c.whatsapp}?text=${encodeURIComponent(txt)}`,"_blank","noopener");
+    });
+  }
 
   /* ---- hero ring: imposta lunghezza tratto per il disegno ---- */
   $$(".hero__ring circle").forEach(cir=>{

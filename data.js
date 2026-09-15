@@ -166,18 +166,16 @@ const DATA = {
   ],
 
   /* ---- ORARI (Europe/Rome) ----
-     ⚠️ ORARI PROVVISORI — DA CONFERMARE. Aggiornali con quelli reali.
      Formato: array di intervalli ["HH:MM","HH:MM"]; giorno chiuso = [].
-     Puoi mettere più intervalli per la pausa pranzo, es:
-        mar: [["09:00","13:00"],["15:00","19:00"]]                          */
+     Più intervalli = pausa pranzo, es: mar: [["09:00","13:00"],["15:00","19:00"]] */
   orari: {
-    lun: [],                       // chiuso
-    mar: [["09:00","19:00"]],
-    mer: [["09:00","19:00"]],
-    gio: [["09:00","20:00"]],
-    ven: [["09:00","20:00"]],
-    sab: [["09:00","19:00"]],
-    dom: []                        // chiuso
+    lun: [],                        // chiuso
+    mar: [["08:30","20:00"]],
+    mer: [["08:30","20:00"]],
+    gio: [["08:30","20:00"]],
+    ven: [["08:30","20:30"]],
+    sab: [["08:00","20:00"]],
+    dom: []                         // chiuso
   },
 
   /* ---- CREDITS (footer) ---- */
