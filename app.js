@@ -214,8 +214,8 @@
 
   /* ---- Nav mobile ---- */
   const nav = $(".nav"), toggle = $(".nav-toggle"), backdrop = $(".nav-backdrop");
-  function closeNav(){ nav&&nav.classList.remove("open"); backdrop&&backdrop.classList.remove("show"); document.body.style.overflow=""; }
-  function openNav(){ nav&&nav.classList.add("open"); backdrop&&backdrop.classList.add("show"); document.body.style.overflow="hidden"; }
+  function closeNav(){ nav&&nav.classList.remove("open"); backdrop&&backdrop.classList.remove("show"); document.body.style.overflow=""; toggle&&toggle.setAttribute("aria-expanded","false"); }
+  function openNav(){ nav&&nav.classList.add("open"); backdrop&&backdrop.classList.add("show"); document.body.style.overflow="hidden"; toggle&&toggle.setAttribute("aria-expanded","true"); }
   toggle && toggle.addEventListener("click",()=> nav.classList.contains("open")?closeNav():openNav());
   backdrop && backdrop.addEventListener("click",closeNav);
   nav && $$("a",nav).forEach(a=>a.addEventListener("click",closeNav));
@@ -247,10 +247,14 @@
     });
   });
 
-  /* ============ PRENOTAZIONE (trattamento / giorno / orario → WhatsApp) ============ */
+  /* ============ PRENOTAZIONE — MODAL (trattamento / giorno / orario → WhatsApp) ============ */
+  const modal=$("#bkModal");
   const bkServ=$("[data-bk-serv]"), bkDate=$("[data-bk-date]"), bkTime=$("[data-bk-time]"),
         bkName=$("[data-bk-name]"), bkMsg=$("[data-bk-msg]"), bkSubmit=$("[data-bk-submit]");
-  if(bkServ && bkDate && bkTime && bkSubmit){
+  if(modal && bkServ && bkDate && bkTime && bkSubmit){
+    const viewForm=modal.querySelector('[data-bk-view="form"]');
+    const viewDone=modal.querySelector('[data-bk-view="done"]');
+
     // Trattamenti dal listino (+ eventuali voci beauty) + voci esperienza
     let opts = '<option value="">Scegli un trattamento</option>';
     D.listino.categorie.forEach(cat=>{
@@ -269,21 +273,16 @@
       + `</optgroup>`;
     bkServ.innerHTML = opts;
 
-    // Data minima = oggi (Europe/Rome)
     const todayISO = new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Rome",
       year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
     bkDate.min = todayISO;
 
     function slotsFor(dateStr){
       const [y,m,d]=dateStr.split("-").map(Number);
-      const key = KEYS[new Date(y,m-1,d).getDay()];
-      const iv = D.orari[key]||[];
+      const iv = D.orari[KEYS[new Date(y,m-1,d).getDay()]]||[];
       const slots=[];
-      iv.forEach(([s,e])=>{
-        for(let t=toMin(s); t<=toMin(e)-30; t+=30){
-          slots.push(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"));
-        }
-      });
+      iv.forEach(([s,e])=>{ for(let t=toMin(s); t<=toMin(e)-30; t+=30){
+        slots.push(String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")); } });
       return slots;
     }
     function fmtDateIt(dateStr){
@@ -291,6 +290,41 @@
       return new Date(y,m-1,d).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});
     }
     function setMsg(t,err){ bkMsg.textContent=t||""; bkMsg.classList.toggle("err",!!err); }
+
+    // preseleziona un trattamento passato dal bottone (match per prefisso nome)
+    function preselect(service){
+      if(!service) return;
+      const o=[...bkServ.options].find(x=>x.value===service
+        || x.value.toLowerCase().startsWith(service.toLowerCase()));
+      if(o) bkServ.value=o.value;
+    }
+
+    let lastFocus=null;
+    function openModal(service){
+      viewDone.hidden=true; viewForm.hidden=false; setMsg("");
+      preselect(service);
+      lastFocus=document.activeElement;
+      modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow="hidden";
+      setTimeout(()=>bkServ.focus(),60);
+    }
+    function closeModal(){
+      modal.classList.remove("open"); modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow="";
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    // apertura da qualsiasi bottone [data-book]
+    $$("[data-book]").forEach(btn=>btn.addEventListener("click",e=>{
+      e.preventDefault();
+      // se il menu mobile è aperto, chiudilo
+      const navEl=$(".nav"); if(navEl) navEl.classList.remove("open");
+      document.body.style.overflow="";
+      openModal(btn.getAttribute("data-service"));
+    }));
+    // chiusura
+    $$("[data-bk-close]").forEach(el=>el.addEventListener("click",closeModal));
+    document.addEventListener("keydown",e=>{ if(e.key==="Escape" && modal.classList.contains("open")) closeModal(); });
 
     bkDate.addEventListener("change",()=>{
       setMsg("");
@@ -311,9 +345,9 @@
       const nome=(bkName.value||"").trim();
       let txt=`Ciao Stany! Vorrei prenotare:\n• Trattamento: ${bkServ.value}\n• Giorno: ${fmtDateIt(bkDate.value)}\n• Orario: ${bkTime.value}`;
       if(nome) txt+=`\n• Nome: ${nome}`;
-      txt+=`\nÈ disponibile?`;
-      setMsg("Apriamo WhatsApp con la tua richiesta…");
+      txt+=`\nResto in attesa della vostra conferma.`;
       window.open(`https://wa.me/${c.whatsapp}?text=${encodeURIComponent(txt)}`,"_blank","noopener");
+      viewForm.hidden=true; viewDone.hidden=false;
     });
   }
 
