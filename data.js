@@ -10,6 +10,7 @@ const DATA = {
   brand: {
     name: "Stany",
     lockup: "Art & Enjoy",
+    tagline: "Art & Enjoy · Parrucchieri · Salone bio naturale",
     payoff: "Hair Spa & Beauty Experience",
     city: "Cava de' Tirreni",
     // Frase hero: voce vera, servizio + luogo. Niente "salone di fiducia".
@@ -62,14 +63,16 @@ const DATA = {
           { nome: "Bio Color",         prezzo: "30€", durata: "" },
           { nome: "Gloss",             prezzo: "30€", durata: "" },
           { nome: "Effetti Luce",      prezzo: "45€", durata: "" },
-          { nome: "Sfumature Degradè", prezzo: "70€", durata: "" }
+          { nome: "Sfumature Degradè", prezzo: "70€", durata: "" },
+          { nome: "Airtouch",          prezzo: "da 180€", durata: "" }
         ]
       },
       {
         nome: "Trattamenti & Forma",
         voci: [
           { nome: "Bio Wave",      prezzo: "65€", durata: "" },
-          { nome: "Ricostruzione", prezzo: "45€", durata: "" }
+          { nome: "Ricostruzione", prezzo: "45€", durata: "" },
+          { nome: "Hair Extension Great Lengths", prezzo: "da 400€", durata: "" }
         ]
       }
     ]
@@ -84,6 +87,14 @@ const DATA = {
       "Servizio anche in location e per il corteo",
       "Coordinamento con la sezione beauty per un look completo"
     ]
+  },
+
+  /* ---- AIRTOUCH (tecnica colore — lavoro reale in video) ---- */
+  airtouch: {
+    titolo: "Airtouch",
+    label: "Specialist",
+    testo: "La tecnica che schiarisce solo i capelli giusti: un getto d'aria separa la peluria e lascia lavorare la mano solo dove serve. Il risultato è una ricrescita morbida, sfumature naturali e un colore che cresce bene per mesi. Guarda un lavoro vero.",
+    prezzoNota: "A partire da 180€"
   },
 
   /* ---- HAIR SPA ---- */
@@ -109,6 +120,7 @@ const DATA = {
      Per sostituire un video: rimpiazza il file mantenendo lo stesso nome. */
   media: {
     heroVideo:      "vid/hero-bg.mp4",     heroPoster:     "img/hero-bg-poster.jpg",
+    airtouchVideo:  "vid/airtouch.mp4",    airtouchPoster: "img/airtouch-poster.jpg",
     hairspaVideo:   "vid/hairspa.mp4",     hairspaPoster:  "img/hairspa-poster.jpg",
     massaggiVideo:  "vid/massaggi.mp4",    massaggiPoster: "img/massaggi-poster.jpg"
   },
@@ -117,9 +129,82 @@ const DATA = {
   beauty: {
     titolo: "Beauty Experience",
     referente: "Stefania Sessa",
-    testo: "La nostra sezione estetica, curata da Stefania Sessa. Trucco sposa e beauty look per gli eventi, coordinati con l'acconciatura per un risultato armonico dalla testa al viso.",
-    // ← Aggiungi qui l'eventuale listino beauty (trucco, sopracciglia, viso...) se vuoi mostrarlo.
-    voci: []  // es: [{ nome: "Trucco sposa + prova", prezzo: "" }]
+    testo: "La sezione estetica curata da Stefania Sessa: unghie, epilazione, pressoterapia, massaggi e trattamenti viso e corpo. Un percorso di benessere che completa la cura del capello.",
+    listino: {
+      categorie: [
+        {
+          nome: "Nails",
+          voci: [
+            { nome: "Manicure",        prezzo: "5€" },
+            { nome: "Copertura in gel", prezzo: "30€" },
+            { nome: "Ricostruzione",   prezzo: "45€" },
+            { nome: "Semipermanente",  prezzo: "20€" },
+            { nome: "Pedicure",        prezzo: "20€" }
+          ]
+        },
+        {
+          nome: "Epilazione cera",
+          voci: [
+            { nome: "Gambe",         prezzo: "20€" },
+            { nome: "Inguine",       prezzo: "10€" },
+            { nome: "Braccia",       prezzo: "10€" },
+            { nome: "Ascelle",       prezzo: "10€" },
+            { nome: "Baffetto",      prezzo: "5€" },
+            { nome: "Cera completa", prezzo: "30€" }
+          ]
+        },
+        {
+          nome: "Epilazione cera uomo",
+          voci: [
+            { nome: "Gambe",         prezzo: "30€" },
+            { nome: "Braccia",       prezzo: "15€" },
+            { nome: "Ascelle",       prezzo: "15€" },
+            { nome: "Petto",         prezzo: "50€" },
+            { nome: "Schiena",       prezzo: "50€" },
+            { nome: "Cera completa", prezzo: "70€" }
+          ]
+        },
+        {
+          nome: "Epilazione filo arabo",
+          voci: [
+            { nome: "Sopracciglia", prezzo: "8€" },
+            { nome: "Baffetto",     prezzo: "5€" },
+            { nome: "Viso",         prezzo: "10€" }
+          ]
+        },
+        {
+          nome: "Pressoterapia",
+          voci: [
+            { nome: "Pressoterapia",                          prezzo: "20€" },
+            { nome: "Pacchetto Smart (10 sedute)",            prezzo: "150€" },
+            { nome: "Pacchetto Plus (10 sedute + massaggio)", prezzo: "200€" }
+          ]
+        },
+        {
+          nome: "Massaggi",
+          voci: [
+            { nome: "Massaggio del fuoco", prezzo: "40€" },
+            { nome: "Bamboo massage",      prezzo: "40€" },
+            { nome: "Hot stone",           prezzo: "40€" },
+            { nome: "Massaggio relax",     prezzo: "30€" }
+          ]
+        },
+        {
+          nome: "Trattamenti",
+          voci: [
+            { nome: "Tinta sopracciglia",       prezzo: "5€" },
+            { nome: "Hennè sopracciglia",       prezzo: "10€" },
+            { nome: "Pulizia viso",             prezzo: "35€" },
+            { nome: "Peeling corpo + massaggio", prezzo: "35€" }
+          ]
+        },
+        {
+          nome: "Infusioni di Giovinezza",
+          voci: [],
+          nota: "A partire da 80€"
+        }
+      ]
+    }
   },
 
   /* ---- TEAM ----

@@ -25,6 +25,7 @@
   $$("[data-brand-payoff]").forEach(el=>el.textContent=D.brand.payoff);
   $("[data-hero-line]") && ($("[data-hero-line]").textContent=D.brand.heroLine);
   $("[data-intro-lead]") && ($("[data-intro-lead]").textContent=`Il salone, la Hair Spa, il beauty. A ${D.brand.city}.`);
+  $("[data-brand-tagline]") && D.brand.tagline && ($("[data-brand-tagline]").textContent=D.brand.tagline);
   $("[data-intro-body]") && ($("[data-intro-body]").textContent=D.brand.intro);
 
   /* ---- Indirizzo ---- */
@@ -35,21 +36,23 @@
   const mapFrame = $("[data-map-frame]");
   if(mapFrame){ mapFrame.src = `https://www.google.com/maps?q=${encodeURIComponent(D.geo.mapQuery)}&z=15&output=embed`; }
 
-  /* ---- LISTINO ---- */
-  const lst = $("[data-listino]");
-  if(lst){
-    lst.innerHTML = D.listino.categorie.map(cat=>`
+  /* ---- LISTINO (renderer riusabile) ---- */
+  function renderListino(categorie, notaFinale){
+    return categorie.map(cat=>`
       <div class="cat">
         <h3>${esc(cat.nome)}</h3>
-        ${cat.voci.map(v=>`
+        ${(cat.voci||[]).map(v=>`
           <div class="voce">
             <span class="voce__name">${esc(v.nome)}${v.durata?`<span class="voce__dur">${esc(v.durata)}</span>`:""}</span>
             <span class="voce__dot"></span>
             <span class="voce__price">${esc(v.prezzo)}</span>
           </div>`).join("")}
+        ${cat.nota?`<p class="cat__nota">${esc(cat.nota)}</p>`:""}
       </div>`).join("")
-      + (D.listino.nota?`<p class="listino__nota">${esc(D.listino.nota)}</p>`:"");
+      + (notaFinale?`<p class="listino__nota">${esc(notaFinale)}</p>`:"");
   }
+  const lst = $("[data-listino]");
+  if(lst) lst.innerHTML = renderListino(D.listino.categorie, D.listino.nota);
 
   /* ---- SPOSA ---- */
   const spTxt = $("[data-sposa-text]"); if(spTxt) spTxt.textContent = D.sposa.testo;
@@ -71,13 +74,17 @@
   D.massaggi && $("[data-massaggi-title]") && ($("[data-massaggi-title]").textContent=D.massaggi.titolo);
   D.massaggi && $("[data-massaggi-text]")  && ($("[data-massaggi-text]").textContent=D.massaggi.testo);
 
+  /* ---- AIRTOUCH ---- */
+  D.airtouch && $("[data-airtouch-title]") && ($("[data-airtouch-title]").textContent=D.airtouch.titolo);
+  D.airtouch && $("[data-airtouch-text]")  && ($("[data-airtouch-text]").textContent=D.airtouch.testo);
+  D.airtouch && $("[data-airtouch-label]") && ($("[data-airtouch-label]").textContent=D.airtouch.label||"");
+  D.airtouch && $("[data-airtouch-price]") && ($("[data-airtouch-price]").textContent=D.airtouch.prezzoNota||"");
+
   /* ---- BEAUTY ---- */
   $("[data-beauty-text]") && ($("[data-beauty-text]").textContent=D.beauty.testo);
-  const bList = $("[data-beauty-list]");
-  if(bList){
-    if(D.beauty.voci && D.beauty.voci.length){
-      bList.innerHTML = D.beauty.voci.map(v=>`<li><span>${esc(v.nome)}</span>${v.prezzo?`<span class="p">${esc(v.prezzo)}</span>`:""}</li>`).join("");
-    } else { bList.remove(); }
+  const bListino = $("[data-beauty-listino]");
+  if(bListino && D.beauty.listino && D.beauty.listino.categorie){
+    bListino.innerHTML = renderListino(D.beauty.listino.categorie, D.beauty.listino.nota);
   }
 
   /* ---- TEAM ---- */
@@ -255,17 +262,20 @@
     const viewForm=modal.querySelector('[data-bk-view="form"]');
     const viewDone=modal.querySelector('[data-bk-view="done"]');
 
-    // Trattamenti dal listino (+ eventuali voci beauty) + voci esperienza
+    // Trattamenti dal listino capelli + listino beauty + voci esperienza
     let opts = '<option value="">Scegli un trattamento</option>';
     D.listino.categorie.forEach(cat=>{
       opts += `<optgroup label="${esc(cat.nome)}">`
         + cat.voci.map(v=>`<option>${esc(v.nome)} — ${esc(v.prezzo)}</option>`).join("")
         + `</optgroup>`;
     });
-    if(D.beauty && D.beauty.voci && D.beauty.voci.length){
-      opts += `<optgroup label="Beauty">`
-        + D.beauty.voci.map(v=>`<option>${esc(v.nome)}${v.prezzo?` — ${esc(v.prezzo)}`:""}</option>`).join("")
-        + `</optgroup>`;
+    if(D.beauty && D.beauty.listino && D.beauty.listino.categorie){
+      D.beauty.listino.categorie.forEach(cat=>{
+        if(!cat.voci || !cat.voci.length) return;
+        opts += `<optgroup label="Beauty · ${esc(cat.nome)}">`
+          + cat.voci.map(v=>`<option>${esc(v.nome)}${v.prezzo?` — ${esc(v.prezzo)}`:""}</option>`).join("")
+          + `</optgroup>`;
+      });
     }
     opts += `<optgroup label="Esperienza & Eventi">`
       + ["Hair Spa","Massaggio","Acconciatura sposa / evento","Beauty / trucco","Consulenza"]

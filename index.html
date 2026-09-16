@@ -72,6 +72,7 @@
     <nav class="nav" aria-label="Navigazione principale">
       <a href="#listino">Listino</a>
       <a href="#sposa">Sposa</a>
+      <a href="#airtouch">Airtouch</a>
       <a href="#hairspa">Hair Spa</a>
       <a href="#massaggi">Massaggi</a>
       <a href="#beauty">Beauty</a>
@@ -106,6 +107,7 @@
   <div class="wrap hero__inner">
     <img class="hero__mono" src="img/monogram.png" alt="" aria-hidden="true">
     <h1 data-brand-name>Stany</h1>
+    <p class="hero__tagline" data-brand-tagline>Art &amp; Enjoy · Parrucchieri · Salone bio naturale</p>
     <p class="hero__payoff" data-brand-payoff>Hair Spa &amp; Beauty Experience</p>
     <p class="hero__line" data-hero-line>—</p>
     <div class="hero__cta">
@@ -161,8 +163,29 @@
   </div>
 </section>
 
+<!-- ============ AIRTOUCH ============ -->
+<section class="section section--alt" id="airtouch">
+  <div class="wrap split">
+    <div class="split__media">
+      <figure class="video-card">
+        <video autoplay muted loop playsinline preload="none"
+               poster="img/airtouch-poster.jpg" data-bgvideo>
+          <source src="vid/airtouch.mp4" type="video/mp4">
+        </video>
+      </figure>
+    </div>
+    <div class="split__copy">
+      <p class="split__eyebrow" data-airtouch-label>Specialist</p>
+      <h2 data-airtouch-title>Airtouch</h2>
+      <p data-airtouch-text>—</p>
+      <p class="split__price" data-airtouch-price>A partire da 180€</p>
+      <p style="margin-top:26px"><button class="btn btn--gold" type="button" data-book data-service="Airtouch">Prenota il tuo Airtouch</button></p>
+    </div>
+  </div>
+</section>
+
 <!-- ============ HAIR SPA ============ -->
-<section class="section section--alt" id="hairspa">
+<section class="section" id="hairspa">
   <div class="wrap split split--rev">
     <div class="split__media">
       <figure class="video-card">
@@ -186,7 +209,7 @@
 </section>
 
 <!-- ============ MASSAGGI ============ -->
-<section class="section" id="massaggi">
+<section class="section section--alt" id="massaggi">
   <div class="wrap split">
     <div class="split__media">
       <figure class="video-card">
@@ -205,17 +228,19 @@
 </section>
 
 <!-- ============ BEAUTY EXPERIENCE ============ -->
-<section class="section section--alt" id="beauty">
-  <div class="wrap beauty-block">
-    <img class="beauty-wordmark" src="img/beauty-wordmark.png" alt="Stefania Sessa — Beauty Experience">
-    <p data-beauty-text>—</p>
-    <ul class="beauty-list" data-beauty-list></ul>
-    <p style="margin-top:26px"><button class="btn btn--ghost" type="button" data-book data-service="Beauty / trucco">Prenota il beauty look</button></p>
+<section class="section" id="beauty">
+  <div class="wrap">
+    <div class="beauty-head">
+      <img class="beauty-wordmark" src="img/beauty-wordmark.png" alt="Stefania Sessa — Beauty Experience">
+      <p data-beauty-text>—</p>
+    </div>
+    <div class="listino" data-beauty-listino></div>
+    <p style="margin-top:40px; text-align:center"><button class="btn btn--gold" type="button" data-book data-service="Beauty / trucco">Prenota in estetica</button></p>
   </div>
 </section>
 
 <!-- ============ RECENSIONI ============ -->
-<section class="section" id="recensioni">
+<section class="section section--alt" id="recensioni">
   <div class="wrap">
     <div class="head"><h2>Dicono di noi</h2></div>
     <div data-reviews></div>
