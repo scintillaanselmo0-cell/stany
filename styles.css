@@ -29,7 +29,7 @@
 }
 
 *{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; overflow-x:hidden; }
 body{
   margin:0;
   background:var(--ink);
@@ -327,8 +327,12 @@ input[type="date"]::-webkit-calendar-picker-indicator{ cursor:pointer;
 .hours li .d{ color:var(--ivory-dim); text-transform:capitalize; }
 .hours li.today .d{ color:var(--gold-br); }
 .hours li .h{ font-variant-numeric:tabular-nums; }
+.map-wrap{ position:relative; }
 .map{ width:100%; aspect-ratio:16/11; min-height:320px; border:1px solid var(--line);
-  border-radius:var(--radius); filter:grayscale(.4) contrast(1.05) brightness(.85); }
+  border-radius:var(--radius); filter:grayscale(.4) contrast(1.05) brightness(.85); display:block; }
+@media (hover:none){ .map{ pointer-events:none; } }  /* su touch la pagina scorre sopra la mappa */
+.map-open{ position:absolute; left:12px; bottom:12px; z-index:2; pointer-events:auto;
+  font-size:.82rem; padding:9px 14px; }
 .storefront{ margin-top:20px; aspect-ratio:16/10; }
 .socials{ display:flex; gap:12px; margin-top:26px; }
 
@@ -351,29 +355,64 @@ input[type="date"]::-webkit-calendar-picker-indicator{ cursor:pointer;
 
 /* ---------- Mobile ---------- */
 @media(max-width:860px){
-  .nav{ position:fixed; inset:0 0 0 auto; width:min(80vw,320px);
-    flex-direction:column; align-items:flex-start; justify-content:center; gap:8px;
-    background:var(--ink-2); padding:40px var(--gutter);
-    transform:translateX(100%); transition:transform .34s cubic-bezier(.5,0,.2,1);
-    z-index:70; box-shadow:-20px 0 60px rgba(0,0,0,.5); }
-  .nav.open{ transform:none; }
-  .nav a{ font-size:1.4rem; font-family:var(--serif); color:var(--ivory); }
+  .nav{ position:fixed; inset:0; width:100%; min-height:100dvh;
+    flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    background:color-mix(in srgb, var(--ink) 97%, transparent);
+    backdrop-filter:blur(10px); padding:88px var(--gutter) 48px;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .28s ease, visibility .28s ease; z-index:70; }
+  .nav.open{ opacity:1; visibility:visible; pointer-events:auto; }
+  .nav a, .nav [data-book]{ font-size:1.6rem; font-family:var(--serif); color:var(--ivory);
+    background:none; border:0; cursor:pointer; padding:10px 8px; }
   .nav a::after{ display:none; }
   .nav-toggle{ display:inline-flex; z-index:80; }
   .header-right .status, .header-right .btn--gold{ display:none; }
   .header-right .icon-btn.phone{ display:inline-flex; }
-  .nav-backdrop{ position:fixed; inset:0; background:rgba(4,3,2,.6); opacity:0; visibility:hidden;
-    transition:opacity .3s; z-index:65; }
-  .nav-backdrop.show{ opacity:1; visibility:visible; }
+  .nav-backdrop{ display:none; }
 
-  .mobile-cta{ display:flex; position:fixed; left:0; right:0; bottom:0; z-index:55;
+  .mobile-cta{ display:flex; align-items:center; position:fixed; left:0; right:0; bottom:0; z-index:55;
     gap:10px; padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-    background:color-mix(in srgb, var(--ink) 92%, transparent);
+    background:color-mix(in srgb, var(--ink) 94%, transparent);
     backdrop-filter:blur(12px); border-top:1px solid var(--line); }
   .mobile-cta .btn{ flex:1; }
   .mobile-cta .icon-btn{ flex:none; }
-  body{ padding-bottom:76px; }
+  body{ padding-bottom:78px; }
   .head__note{ margin-left:0; }
+  .hero__ring{ width:70vw; top:6%; right:-14%; }
+}
+
+/* ---------- Modal prenotazione ---------- */
+.modal{ position:fixed; inset:0; z-index:120; display:flex; align-items:center; justify-content:center;
+  padding:24px; opacity:0; visibility:hidden; transition:opacity .28s ease, visibility .28s ease; }
+.modal.open{ opacity:1; visibility:visible; }
+.modal__backdrop{ position:absolute; inset:0; background:rgba(4,3,2,.74); backdrop-filter:blur(4px); }
+.modal__card{ position:relative; width:min(560px,100%); max-height:90svh; overflow-y:auto;
+  background:var(--ink-2); border:1px solid var(--line); border-radius:8px;
+  padding:clamp(24px,4vw,40px); box-shadow:0 30px 80px rgba(0,0,0,.6);
+  transform:translateY(16px); transition:transform .3s cubic-bezier(.22,.61,.36,1); }
+.modal.open .modal__card{ transform:none; }
+.modal__close{ position:absolute; top:14px; right:14px; width:40px; height:40px; display:inline-flex;
+  align-items:center; justify-content:center; border:1px solid var(--line); border-radius:50%;
+  background:none; color:var(--ivory-dim); cursor:pointer; transition:border-color .2s, color .2s; }
+.modal__close:hover{ border-color:var(--gold); color:var(--gold-br); }
+.modal__close svg{ width:18px; height:18px; }
+.modal__title{ font-size:clamp(1.8rem,5vw,2.4rem); margin:0 0 6px; padding-right:40px; }
+.modal__sub{ color:var(--muted); font-size:.92rem; margin:0 0 22px; }
+.modal .field, .modal .field-row{ margin-bottom:16px; }
+.modal .booking__msg{ margin:2px 0 14px; }
+.modal [data-bk-submit]{ width:100%; }
+.modal__alt{ color:var(--muted); font-size:.9rem; text-align:center; margin:14px 0 0; }
+.modal__alt a{ color:var(--gold-br); }
+.modal__done{ text-align:center; padding-block:14px; }
+.done-mark{ width:64px; height:64px; margin:0 auto 20px; border-radius:50%;
+  border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center;
+  color:var(--gold-br); }
+.done-mark svg{ width:30px; height:30px; }
+.modal__done p{ color:var(--ivory-dim); max-width:34ch; margin:0 auto 22px; }
+@media(max-width:600px){
+  .modal{ align-items:flex-end; padding:0; }
+  .modal__card{ width:100%; max-height:94svh; border-radius:18px 18px 0 0; border-bottom:0;
+    padding:28px 20px calc(28px + env(safe-area-inset-bottom)); transform:translateY(100%); }
 }
 
 @media (prefers-reduced-motion:reduce){
