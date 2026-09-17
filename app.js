@@ -230,16 +230,25 @@
   /* ---- anno footer ---- */
   $("[data-year]") && ($("[data-year]").textContent = new Date().getFullYear());
 
-  /* ---- VIDEO: autoplay muto in loop, pausa fuori schermo, reduced-motion ---- */
-  const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* ---- VIDEO: autoplay muto in loop, pausa fuori schermo ---- */
   const vids = $$("[data-bgvideo]");
-  const tryPlay = v => { try{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); }catch(e){} };
-  if(reduceMotion){
-    vids.forEach(v=>{ v.removeAttribute("autoplay"); try{v.pause();}catch(e){} });
-  } else if("IntersectionObserver" in window){
+  // garantisce l'autoplay ovunque (desktop incluso): muted come proprietà + inline
+  vids.forEach(v=>{ v.muted = true; v.setAttribute("muted",""); v.playsInline = true;
+    v.setAttribute("playsinline",""); });
+  const tryPlay = v => {
+    const p = v.play();
+    if(p && p.catch) p.catch(()=>{
+      // se il browser blocca, riprova appena il video è pronto o al primo click/scroll
+      const retry = ()=>{ v.play().catch(()=>{}); };
+      v.addEventListener("canplay", retry, {once:true});
+      window.addEventListener("pointerdown", retry, {once:true});
+      window.addEventListener("scroll", retry, {once:true, passive:true});
+    });
+  };
+  if("IntersectionObserver" in window){
     const io=new IntersectionObserver(es=>es.forEach(e=>{
       if(e.isIntersecting) tryPlay(e.target); else { try{e.target.pause();}catch(err){} }
-    }),{threshold:.15});
+    }),{threshold:.12});
     vids.forEach(v=>io.observe(v));
   } else { vids.forEach(tryPlay); }
 
