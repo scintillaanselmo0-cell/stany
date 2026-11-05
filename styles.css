@@ -371,6 +371,13 @@ input[type="date"]::-webkit-calendar-picker-indicator{ cursor:pointer;
 .foot__link{ background:none; border:0; color:var(--gold); cursor:pointer; font:inherit;
   padding:0; letter-spacing:.01em; }
 .foot__link:hover{ color:var(--gold-br); text-decoration:underline; }
+.foot__credit{ display:inline-flex; align-items:center; gap:10px; color:var(--muted); }
+.foot__credit a{ color:var(--ivory-dim); }
+.foot__credit > a:hover{ color:var(--gold-br); }
+.foot__credit-icons{ display:inline-flex; align-items:center; gap:8px; }
+.foot__credit-icons a{ display:inline-flex; color:var(--muted); transition:color .2s; }
+.foot__credit-icons a:hover{ color:var(--gold-br); }
+.foot__credit-icons svg{ width:16px; height:16px; }
 
 /* Privacy note nel modal prenota */
 .modal__privacy{ color:var(--muted); font-size:.8rem; line-height:1.5; text-align:center;
